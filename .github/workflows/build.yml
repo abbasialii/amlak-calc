@@ -1,7 +1,7 @@
 name: Build Android APK
 
 on:
-  workflow_dispatch: # این خط اجازه می‌دهد ساخت برنامه را دستی اجرا کنیم
+  workflow_dispatch:
 
 jobs:
   build:
@@ -22,16 +22,11 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-
       - name: Install Flet
-        run: pip install flet
+        run: pip install flet==0.23.2
 
-      - name: Build APK
-        run: flet build apk
+      - name: Build APK (Auto Confirm)
+        run: yes | flet build apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
