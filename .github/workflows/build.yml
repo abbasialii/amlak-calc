@@ -28,7 +28,7 @@ jobs:
           flutter-version: '3.24.3'
 
       - name: Install Flet
-        run: pip install flet
+        run: pip install flet==0.23.2
 
       - name: Build APK
         run: |
