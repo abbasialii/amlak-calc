@@ -255,4 +255,4 @@ def main(page: ft.Page):
 
     page.add(header, modern_tabs)
 
-ft.app(target=main)
+ft.run(main)
