@@ -66,7 +66,7 @@ def main(page: ft.Page):
     header = ft.Container(
         content=ft.Column([
             ft.Row([
-                ft.Icon(ft.icons.VERIFIED_USER_ROUNDED, color=ft.colors.WHITE, size=24),
+                ft.Icon(ft.icons.VERIFIED_USER, color=ft.colors.WHITE, size=24),
                 ft.Text("دستیار هوشمند املاک", size=18, weight=ft.FontWeight.BOLD, color=ft.colors.WHITE)
             ], alignment=ft.MainAxisAlignment.CENTER),
             ft.Text("محاسبه‌گر دقیق کمیسیون و مالیات", size=12, color=ft.colors.WHITE70)
