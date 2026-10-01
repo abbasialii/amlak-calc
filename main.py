@@ -5,7 +5,7 @@ def num_to_persian_words(n):
     if n == 0: return "صفر"
     
     ones = ["", "یک", "دو", "سه", "چهار", "پنج", "شش", "هفت", "هشت", "نه"]
-    tens = ["", "ده", "بیست", "سی", "چهارل", "پنجاه", "شصت", "هفتاد", "هشتاد", "نود"]
+    tens = ["", "ده", "بیست", "سی", "چهل", "پنجاه", "شصت", "هفتاد", "هشتاد", "نود"]
     teens = ["ده", "یازده", "دوازده", "سیزده", "چهارده", "پانزده", "شانزده", "هفده", "هجده", "نوزده"]
     hundreds = ["", "صد", "دویست", "سیصد", "چهارصد", "پانصد", "ششصد", "هفتصد", "هشتصد", "نهصد"]
     magnitudes = ["", " هزار", " میلیون", " میلیارد", " هزار میلیارد"]
@@ -20,7 +20,7 @@ def num_to_persian_words(n):
             res.append(teens[rem - 10])
         else:
             t = rem // 10
-            if t > 0: res.append(tens[t].replace("چهارل", "چهل"))
+            if t > 0: res.append(tens[t])
             o = rem % 10
             if o > 0: res.append(ones[o])
         return " و ".join(res)
@@ -46,7 +46,7 @@ def main(page: ft.Page):
     page.rtl = True
     page.padding = 0
     page.bgcolor = "#F2F4F7"
-    page.scroll = ft.ScrollMode.AUTO
+    # اسکرول کل صفحه حذف شد تا تب‌ها بتوانند ارتفاع بگیرند
 
     BLUE_COLOR = "#1D5BBA"
     
@@ -146,6 +146,7 @@ def main(page: ft.Page):
         sale_result_card.visible = True
         page.update()
 
+    # اسکرول به این بخش اضافه شد
     sale_view = ft.Column([
         ft.Container(height=5),
         sale_input_container,
@@ -158,7 +159,7 @@ def main(page: ft.Page):
         ),
         ft.Container(height=5),
         sale_result_card
-    ])
+    ], scroll=ft.ScrollMode.AUTO)
 
     # ================= بخش رهن و اجاره =================
     mortgage_word_txt = ft.Text(value="", size=12, color=BLUE_COLOR, weight=ft.FontWeight.W_500)
@@ -223,6 +224,7 @@ def main(page: ft.Page):
         rent_result_card.visible = True
         page.update()
 
+    # اسکرول به این بخش اضافه شد
     rent_view = ft.Column([
         ft.Container(height=5),
         mortgage_container,
@@ -237,7 +239,7 @@ def main(page: ft.Page):
         ),
         ft.Container(height=5),
         rent_result_card
-    ])
+    ], scroll=ft.ScrollMode.AUTO)
 
     # ================= منوی تب مدرن بالای صفحه =================
     modern_tabs = ft.Tabs(
@@ -250,7 +252,7 @@ def main(page: ft.Page):
             ft.Tab(text="خرید و فروش", icon=ft.icons.HANDSHAKE, content=ft.Container(content=sale_view, padding=20)),
             ft.Tab(text="رهن و اجاره", icon=ft.icons.HOME_WORK, content=ft.Container(content=rent_view, padding=20)),
         ],
-        
+        expand=1,
     )
 
     page.add(header, modern_tabs)
