@@ -30,6 +30,9 @@ jobs:
         with:
           flutter-version: '3.24.3'
 
+      - name: Accept Android Licenses
+        run: yes | flutter doctor --android-licenses
+
       - name: Install Flet
         run: pip install flet
 
