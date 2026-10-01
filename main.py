@@ -46,7 +46,6 @@ def main(page: ft.Page):
     page.rtl = True
     page.padding = 0
     page.bgcolor = "#F2F4F7"
-    # اسکرول کل صفحه حذف شد تا تب‌ها بتوانند ارتفاع بگیرند
 
     BLUE_COLOR = "#1D5BBA"
     
@@ -146,7 +145,6 @@ def main(page: ft.Page):
         sale_result_card.visible = True
         page.update()
 
-    # اسکرول به این بخش اضافه شد
     sale_view = ft.Column([
         ft.Container(height=5),
         sale_input_container,
@@ -224,7 +222,6 @@ def main(page: ft.Page):
         rent_result_card.visible = True
         page.update()
 
-    # اسکرول به این بخش اضافه شد
     rent_view = ft.Column([
         ft.Container(height=5),
         mortgage_container,
@@ -241,6 +238,70 @@ def main(page: ft.Page):
         rent_result_card
     ], scroll=ft.ScrollMode.AUTO)
 
+    # ================= بخش جدید: تبدیل ریال و تومان =================
+    c_toman_word = ft.Text("", size=14, color=BLUE_COLOR, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
+    c_rial_word = ft.Text("", size=14, color=ft.colors.GREY_700, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
+
+    converter_word_card = ft.Container(
+        content=ft.Column([
+            ft.Text("معادل حروفی", size=12, color=ft.colors.GREY_500),
+            c_toman_word,
+            ft.Divider(height=10, color=ft.colors.GREY_200),
+            c_rial_word
+        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+        bgcolor=ft.colors.WHITE,
+        border_radius=20,
+        padding=20,
+        shadow=ft.BoxShadow(blur_radius=15, color=ft.colors.BLACK12, offset=ft.Offset(0, 5)),
+        visible=False,
+        width=float('inf')
+    )
+
+    def on_convert_rial_change(e):
+        format_input(e)
+        val = get_raw_value(e.control.value)
+        if val > 0:
+            toman_val = val // 10
+            c_toman_input.value = f"{toman_val:,}"
+            c_toman_word.value = f"{num_to_persian_words(toman_val)} تومان"
+            c_rial_word.value = f"{num_to_persian_words(val)} ریال"
+            converter_word_card.visible = True
+        else:
+            c_toman_input.value = ""
+            converter_word_card.visible = False
+        page.update()
+
+    def on_convert_toman_change(e):
+        format_input(e)
+        val = get_raw_value(e.control.value)
+        if val > 0:
+            rial_val = val * 10
+            c_rial_input.value = f"{rial_val:,}"
+            c_toman_word.value = f"{num_to_persian_words(val)} تومان"
+            c_rial_word.value = f"{num_to_persian_words(rial_val)} ریال"
+            converter_word_card.visible = True
+        else:
+            c_rial_input.value = ""
+            converter_word_card.visible = False
+        page.update()
+
+    c_rial_input, c_rial_container = create_modern_input("مبلغ به ریال", ft.icons.MONEY, on_convert_rial_change)
+    c_toman_input, c_toman_container = create_modern_input("مبلغ به تومان", ft.icons.ACCOUNT_BALANCE_WALLET, on_convert_toman_change)
+
+    converter_view = ft.Column([
+        ft.Container(height=5),
+        c_toman_container,
+        ft.Container(
+            content=ft.Icon(ft.icons.SWAP_VERT, color=BLUE_COLOR, size=30),
+            alignment=ft.alignment.center,
+            padding=5
+        ),
+        c_rial_container,
+        ft.Container(height=15),
+        converter_word_card
+    ], scroll=ft.ScrollMode.AUTO)
+
+
     # ================= منوی تب مدرن بالای صفحه =================
     modern_tabs = ft.Tabs(
         selected_index=0,
@@ -249,8 +310,9 @@ def main(page: ft.Page):
         label_color=BLUE_COLOR,
         indicator_color=BLUE_COLOR,
         tabs=[
-            ft.Tab(text="خرید و فروش", icon=ft.icons.HANDSHAKE, content=ft.Container(content=sale_view, padding=20)),
-            ft.Tab(text="رهن و اجاره", icon=ft.icons.HOME_WORK, content=ft.Container(content=rent_view, padding=20)),
+            ft.Tab(text="خرید/فروش", icon=ft.icons.HANDSHAKE, content=ft.Container(content=sale_view, padding=20)),
+            ft.Tab(text="رهن/اجاره", icon=ft.icons.HOME_WORK, content=ft.Container(content=rent_view, padding=20)),
+            ft.Tab(text="تبدیل واحد", icon=ft.icons.SYNC, content=ft.Container(content=converter_view, padding=20)),
         ],
         expand=1,
     )
