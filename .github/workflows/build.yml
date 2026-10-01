@@ -28,7 +28,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.3'
+          flutter-version: '3.19.6'
 
       - name: Accept Android Licenses
         run: |
@@ -36,7 +36,7 @@ jobs:
           yes | flutter doctor --android-licenses
 
       - name: Install Flet
-        run: pip install flet
+        run: pip install flet==0.23.2
 
       - name: Build APK
         run: |
