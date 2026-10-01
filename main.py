@@ -250,7 +250,7 @@ def main(page: ft.Page):
             ft.Tab(text="خرید و فروش", icon=ft.icons.HANDSHAKE, content=ft.Container(content=sale_view, padding=20)),
             ft.Tab(text="رهن و اجاره", icon=ft.icons.HOME_WORK, content=ft.Container(content=rent_view, padding=20)),
         ],
-        expand=1,
+        
     )
 
     page.add(header, modern_tabs)
