@@ -238,9 +238,13 @@ def main(page: ft.Page):
         rent_result_card
     ], scroll=ft.ScrollMode.AUTO)
 
-    # ================= بخش جدید: تبدیل ریال و تومان =================
+    # ================= بخش تبدیل ریال و تومان =================
     c_toman_word = ft.Text("", size=14, color=BLUE_COLOR, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
     c_rial_word = ft.Text("", size=14, color=ft.colors.GREY_700, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
+    
+    # متون حروفی که زیر هر کادر قرار می‌گیرند
+    toman_under_txt = ft.Text(value="", size=12, color=BLUE_COLOR, weight=ft.FontWeight.W_500)
+    rial_under_txt = ft.Text(value="", size=12, color=BLUE_COLOR, weight=ft.FontWeight.W_500)
 
     converter_word_card = ft.Container(
         content=ft.Column([
@@ -257,18 +261,33 @@ def main(page: ft.Page):
         width=float('inf')
     )
 
+    def update_converter_texts(toman_val, rial_val):
+        if toman_val > 0 or rial_val > 0:
+            persian_toman = f"{num_to_persian_words(toman_val)} تومان"
+            persian_rial = f"{num_to_persian_words(rial_val)} ریال"
+            
+            c_toman_word.value = persian_toman
+            c_rial_word.value = persian_rial
+            toman_under_txt.value = persian_toman
+            rial_under_txt.value = persian_rial
+            converter_word_card.visible = True
+        else:
+            c_toman_word.value = ""
+            c_rial_word.value = ""
+            toman_under_txt.value = ""
+            rial_under_txt.value = ""
+            converter_word_card.visible = False
+
     def on_convert_rial_change(e):
         format_input(e)
         val = get_raw_value(e.control.value)
         if val > 0:
             toman_val = val // 10
             c_toman_input.value = f"{toman_val:,}"
-            c_toman_word.value = f"{num_to_persian_words(toman_val)} تومان"
-            c_rial_word.value = f"{num_to_persian_words(val)} ریال"
-            converter_word_card.visible = True
+            update_converter_texts(toman_val, val)
         else:
             c_toman_input.value = ""
-            converter_word_card.visible = False
+            update_converter_texts(0, 0)
         page.update()
 
     def on_convert_toman_change(e):
@@ -277,12 +296,10 @@ def main(page: ft.Page):
         if val > 0:
             rial_val = val * 10
             c_rial_input.value = f"{rial_val:,}"
-            c_toman_word.value = f"{num_to_persian_words(val)} تومان"
-            c_rial_word.value = f"{num_to_persian_words(rial_val)} ریال"
-            converter_word_card.visible = True
+            update_converter_texts(val, rial_val)
         else:
             c_rial_input.value = ""
-            converter_word_card.visible = False
+            update_converter_texts(0, 0)
         page.update()
 
     c_rial_input, c_rial_container = create_modern_input("مبلغ به ریال", ft.icons.MONEY, on_convert_rial_change)
@@ -291,12 +308,14 @@ def main(page: ft.Page):
     converter_view = ft.Column([
         ft.Container(height=5),
         c_toman_container,
+        ft.Container(content=toman_under_txt, padding=ft.padding.only(right=10)),
         ft.Container(
             content=ft.Icon(ft.icons.SWAP_VERT, color=BLUE_COLOR, size=30),
             alignment=ft.alignment.center,
             padding=5
         ),
         c_rial_container,
+        ft.Container(content=rial_under_txt, padding=ft.padding.only(right=10)),
         ft.Container(height=15),
         converter_word_card
     ], scroll=ft.ScrollMode.AUTO)
